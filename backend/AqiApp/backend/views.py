@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 # A view is a function that takes a web request and returns a response
 from rest_framework import generics # pre-built model to create views 
-from .models import Location
+from .models import Location, AirQuality
 from .serializers import LocationSerializer
 
 # ListAPIView is a GET request
@@ -25,3 +25,11 @@ class LocationListCreateAPIView(generics.ListCreateAPIView):
 class LocationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Location.objects.all() 
     serializer_class = LocationSerializer
+
+class AirQualityListAPIView(generics.ListAPIView):
+    queryset = AirQuality.objects.all()
+    
+    def get_queryset(self):
+        return AirQuality.objects.filter(
+            location_id = self.kwargs['location_id']
+        )
